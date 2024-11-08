@@ -26,4 +26,4 @@ jobs:
           context: ./
           file: docker/Dockerfile
           pull: false
-          push: false
+          push: true
