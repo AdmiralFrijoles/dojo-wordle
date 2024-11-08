@@ -2,6 +2,7 @@ import './index.css'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Helmet } from 'react-helmet'
 
 import App from './App'
 import { AlertProvider } from './context/AlertContext'
