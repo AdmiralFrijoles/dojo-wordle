@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-   build:
+  build:
     runs-on: ubuntu-latest
     name: Set up Docker
     steps:
@@ -26,4 +26,4 @@ jobs:
           context: ./
           file: docker/Dockerfile
           pull: false
-          push: true
+          push: false

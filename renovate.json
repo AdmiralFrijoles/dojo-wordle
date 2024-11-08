@@ -1,9 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
-  "assignees": ["modem7"],
+  "assignees": ["AdmiralFrijoles"],
   "labels": ["dependencies"],
-  "timezone": ["Europe/London"],
+  "timezone": ["America/New_York"],
   "npm": {
     "enabled": false
   }
