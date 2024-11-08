@@ -11,11 +11,9 @@ import queryString from 'query-string'
 import { ENABLE_ARCHIVED_GAMES } from '../constants/settings'
 import { NOT_CONTAINED_MESSAGE, WRONG_SPOT_MESSAGE } from '../constants/strings'
 import { VALID_GUESSES } from '../constants/validGuesses'
-//import { WORDS } from '../constants/wordlist'
 import { getToday } from './dateutils'
 import { getGuessStatuses } from './statuses'
 
-// 1 January 2022 Game Epoch
 export const firstGameDate = new Date(2021, 6, 19)
 export const periodInDays = 1
 
@@ -136,25 +134,6 @@ export const isValidGameDate = (date: Date) => {
   return differenceInDays(firstGameDate, date) % periodInDays === 0
 }
 
-//export const getIndex = (gameDate: Date) => {
-//  let start = firstGameDate
-//  let index = -1
-//  do {
-//    index++
-//    start = addDays(start, periodInDays)
-//  } while (start <= gameDate)
-//
-//  return index
-//}
-
-//export const getWordOfDay = (index: number) => {
-//  if (index < 0) {
-//    throw new Error('Invalid index')
-//  }
-//
-//  return localeAwareUpperCase(WORDS[index % WORDS.length])
-//}
-
 export const getSolution = (gameDate: Date) => {
   var solution = solutions.find((x) => {
     var solutionDateOnly = startOfDay(x.solutionGameDate)
@@ -163,8 +142,6 @@ export const getSolution = (gameDate: Date) => {
   })
 
   const nextGameDate = getNextGameDate(gameDate)
-  //const index = getIndex(gameDate)
-  //const wordOfTheDay = getWordOfDay(index)
   return {
     solution: solution!.solution,
     solutionGameDate: solution!.solutionGameDate,
