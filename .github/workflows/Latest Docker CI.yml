@@ -12,6 +12,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     name: Set up Docker
     steps:
       - name: Checkout code
@@ -26,4 +28,5 @@ jobs:
           context: ./
           file: docker/Dockerfile
           pull: false
-          push: false
+          push: true
+          tags: ghcr.io/admiralfrijoles/wordle:latest
