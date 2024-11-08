@@ -11,17 +11,58 @@ import queryString from 'query-string'
 import { ENABLE_ARCHIVED_GAMES } from '../constants/settings'
 import { NOT_CONTAINED_MESSAGE, WRONG_SPOT_MESSAGE } from '../constants/strings'
 import { VALID_GUESSES } from '../constants/validGuesses'
-import { WORDS } from '../constants/wordlist'
+//import { WORDS } from '../constants/wordlist'
 import { getToday } from './dateutils'
 import { getGuessStatuses } from './statuses'
 
 // 1 January 2022 Game Epoch
-export const firstGameDate = new Date(2022, 0)
+export const firstGameDate = new Date(2021, 6, 19)
 export const periodInDays = 1
+
+interface Solution {
+  solutionGameDate: Date
+  solutionIndex: number
+  solution: string
+}
+
+export const localeAwareLowerCase = (text: string) => {
+  return process.env.REACT_APP_LOCALE_STRING
+    ? text.toLocaleLowerCase(process.env.REACT_APP_LOCALE_STRING)
+    : text.toLowerCase()
+}
+
+export const localeAwareUpperCase = (text: string) => {
+  return process.env.REACT_APP_LOCALE_STRING
+    ? text.toLocaleUpperCase(process.env.REACT_APP_LOCALE_STRING)
+    : text.toUpperCase()
+}
+
+const loadSolutions = async () => {
+  const url = 'data/solutions.json'
+
+  var data: Solution[] = await fetch(url)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson.map((x: any) => {
+        return {
+          solutionGameDate: parseISO(x.print_date),
+          solutionIndex: x.days_since_launch,
+          solution: localeAwareUpperCase(x.solution),
+        }
+      })
+    })
+    .catch((err) => {
+      console.error('Failed to load solutions.')
+      console.error(err)
+    })
+  return data
+}
+
+const solutions = await loadSolutions()
 
 export const isWordInWordList = (word: string) => {
   return (
-    WORDS.includes(localeAwareLowerCase(word)) ||
+    solutions.map((x) => x.solution).includes(localeAwareLowerCase(word)) ||
     VALID_GUESSES.includes(localeAwareLowerCase(word))
   )
 }
@@ -77,18 +118,6 @@ export const unicodeLength = (word: string) => {
   return unicodeSplit(word).length
 }
 
-export const localeAwareLowerCase = (text: string) => {
-  return process.env.REACT_APP_LOCALE_STRING
-    ? text.toLocaleLowerCase(process.env.REACT_APP_LOCALE_STRING)
-    : text.toLowerCase()
-}
-
-export const localeAwareUpperCase = (text: string) => {
-  return process.env.REACT_APP_LOCALE_STRING
-    ? text.toLocaleUpperCase(process.env.REACT_APP_LOCALE_STRING)
-    : text.toUpperCase()
-}
-
 export const getLastGameDate = (today: Date) => {
   const t = startOfDay(today)
   let daysSinceLastGame = differenceInDays(firstGameDate, t) % periodInDays
@@ -107,33 +136,39 @@ export const isValidGameDate = (date: Date) => {
   return differenceInDays(firstGameDate, date) % periodInDays === 0
 }
 
-export const getIndex = (gameDate: Date) => {
-  let start = firstGameDate
-  let index = -1
-  do {
-    index++
-    start = addDays(start, periodInDays)
-  } while (start <= gameDate)
+//export const getIndex = (gameDate: Date) => {
+//  let start = firstGameDate
+//  let index = -1
+//  do {
+//    index++
+//    start = addDays(start, periodInDays)
+//  } while (start <= gameDate)
+//
+//  return index
+//}
 
-  return index
-}
-
-export const getWordOfDay = (index: number) => {
-  if (index < 0) {
-    throw new Error('Invalid index')
-  }
-
-  return localeAwareUpperCase(WORDS[index % WORDS.length])
-}
+//export const getWordOfDay = (index: number) => {
+//  if (index < 0) {
+//    throw new Error('Invalid index')
+//  }
+//
+//  return localeAwareUpperCase(WORDS[index % WORDS.length])
+//}
 
 export const getSolution = (gameDate: Date) => {
+  var solution = solutions.find((x) => {
+    var solutionDateOnly = startOfDay(x.solutionGameDate)
+    var gameDateOnly = startOfDay(gameDate)
+    return differenceInDays(solutionDateOnly, gameDateOnly) === 0
+  })
+
   const nextGameDate = getNextGameDate(gameDate)
-  const index = getIndex(gameDate)
-  const wordOfTheDay = getWordOfDay(index)
+  //const index = getIndex(gameDate)
+  //const wordOfTheDay = getWordOfDay(index)
   return {
-    solution: wordOfTheDay,
-    solutionGameDate: gameDate,
-    solutionIndex: index,
+    solution: solution!.solution,
+    solutionGameDate: solution!.solutionGameDate,
+    solutionIndex: solution!.solutionIndex,
     tomorrow: nextGameDate.valueOf(),
   }
 }
