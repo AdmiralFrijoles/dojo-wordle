@@ -1,6 +1,6 @@
 import './App.css'
 
-import { ClockIcon } from '@heroicons/react/outline'
+import { ClockIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
 import { default as GraphemeSplitter } from 'grapheme-splitter'
 import { useEffect, useState } from 'react'
