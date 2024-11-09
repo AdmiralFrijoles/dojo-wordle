@@ -3,6 +3,7 @@ import {
   HIGH_CONTRAST_MODE_DESCRIPTION,
   INSTALL_BUTTON_TEXT,
 } from '../../constants/strings'
+import { useDiscordUser } from '../../context/UserContext'
 import { BaseModal } from './BaseModal'
 import { SettingsToggle } from './SettingsToggle'
 
@@ -62,6 +63,30 @@ export const InstallButton = () => {
   )
 }
 
+export const UserView = () => {
+  const { user, onLogin } = useDiscordUser()
+
+  return (
+    user && (
+      <>
+        <div className="flex justify-between gap-4 py-3">
+          <div className="mt-2 text-left text-gray-500 dark:text-gray-300">
+            <p className="leading-none">Logged in as {user.global_name}</p>
+          </div>
+          <div className="flex h-8 shrink-0 items-center">
+            <button
+              className="mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-2 py-1 text-center text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-base"
+              onClick={() => onLogin(null)}
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </>
+    )
+  )
+}
+
 export const SettingsModal = ({
   isOpen,
   handleClose,
@@ -72,9 +97,12 @@ export const SettingsModal = ({
   isHighContrastMode,
   handleHighContrastMode,
 }: Props) => {
+  const { user } = useDiscordUser()
+
   return (
     <BaseModal title="Settings" isOpen={isOpen} handleClose={handleClose}>
       <div className="mt-2 flex flex-col divide-y">
+        <UserView />
         <SettingsToggle
           settingName="Hard Mode"
           flag={isHardMode}

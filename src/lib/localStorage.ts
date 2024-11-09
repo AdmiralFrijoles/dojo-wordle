@@ -1,10 +1,35 @@
+import {DiscordAccessToken} from './discord/DiscordLoginTypes'
+import { encrypt, decrypt } from './encryption'
+
 const gameStateKey = 'gameState'
 const archiveGameStateKey = 'archiveGameState'
 const highContrastKey = 'highContrast'
+const discordTokenKey = 'discordToken'
 
 export type StoredGameState = {
   guesses: string[]
   solution: string
+}
+
+export const saveDiscordAccessTokenToLocalStorage = (
+  token: DiscordAccessToken
+) => {
+  localStorage.setItem(discordTokenKey, encrypt(JSON.stringify(token)))
+}
+
+export const removeDiscordAccessTokenFromLocalStorage = () => {
+  localStorage.removeItem(discordTokenKey)
+}
+
+export const loadDiscordAccessTokenFromLocalStorage = () => {
+  let token = localStorage.getItem(discordTokenKey)
+
+  if (token) {
+    token = decrypt(token)
+    return token ? (JSON.parse(token) as DiscordAccessToken) : null
+  }
+
+  return null  
 }
 
 export const saveGameStateToLocalStorage = (

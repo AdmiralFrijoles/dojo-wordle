@@ -11,3 +11,6 @@ export const BLOWFISH_KEY = 'K/W{|(:ZhbW#BAyb[tO%Tge$7@Y%^8Iw'
 export const BLOWFISH_IV = '#45XmF^w'
 export const ENABLE_ARCHIVED_GAMES = true
 export const DATE_LOCALE = enUS
+
+export const DISCORD_CLIENT_ID = process.env.REACT_APP_DISCORD_CLIENT_ID
+export const BASE_URL = process.env.REACT_APP_BASE_URL
