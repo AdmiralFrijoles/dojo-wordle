@@ -34,7 +34,6 @@ import {
   WORD_NOT_FOUND_MESSAGE,
 } from './constants/strings'
 import { useAlert } from './context/AlertContext'
-import { useDiscordUser } from './context/UserContext'
 import { isInAppBrowser } from './lib/browser'
 import {
   getStoredIsHighContrastMode,

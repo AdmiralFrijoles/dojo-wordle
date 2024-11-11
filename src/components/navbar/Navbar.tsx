@@ -7,8 +7,8 @@ import {
 
 import { ENABLE_ARCHIVED_GAMES } from '../../constants/settings'
 import { GAME_TITLE } from '../../constants/strings'
-import { DiscordLogin } from './DiscordLogin'
-import { useDiscordUser } from '../../context/UserContext'
+import { LoginButton } from './Login'
+import { useAuth0 } from "@auth0/auth0-react";
 
 type Props = {
   setIsInfoModalOpen: (value: boolean) => void
@@ -23,7 +23,7 @@ export const Navbar = ({
   setIsDatePickerModalOpen,
   setIsSettingsModalOpen,
 }: Props) => {
-  const { user: user } = useDiscordUser()
+  const { user, isAuthenticated, isLoading } = useAuth0();
 
   return (
     <div className="navbar">
@@ -42,7 +42,8 @@ export const Navbar = ({
         </div>
         <p className="text-xl font-bold dark:text-white">{GAME_TITLE}</p>
         <div className="right-icons">
-          {!user && <DiscordLogin />}
+          {!isAuthenticated && <LoginButton/>}
+          {isAuthenticated && <img className='mr-3 h-6 w-6' src={user?.picture} alt={user?.name}/>}
           <ChartBarIcon
             className="mr-3 h-6 w-6 cursor-pointer dark:stroke-white"
             onClick={() => setIsStatsModalOpen(true)}

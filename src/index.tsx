@@ -1,19 +1,28 @@
 import './index.css'
 
 import React from 'react'
-import ReactDOM from 'react-dom'
-
-import App from './App'
+import { createRoot } from 'react-dom/client';
 import { AlertProvider } from './context/AlertContext'
-import { UserProvider } from './context/UserContext'
+import { Auth0Provider } from '@auth0/auth0-react';
+import App from './App'
+import { AUTHZERO_DOMAIN, AUTHZERO_CLIENT_ID } from './constants/settings'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <UserProvider>
+const root = createRoot(document.getElementById('root')!);
+
+root.render(
+  <Auth0Provider
+    domain={AUTHZERO_DOMAIN!}
+    clientId={AUTHZERO_CLIENT_ID!}
+    authorizationParams={{
+      redirect_uri: window.location.origin,
+    }}
+    useRefreshTokens={true}
+    cacheLocation='localstorage'
+  >
+    <React.StrictMode>
       <AlertProvider>
         <App />
       </AlertProvider>
-    </UserProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+    </React.StrictMode>
+  </Auth0Provider>
+);

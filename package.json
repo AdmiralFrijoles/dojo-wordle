@@ -15,6 +15,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.2.4",
     "@headlessui/react": "1.7",
     "@heroicons/react": "^2.1.5",
     "@tailwindcss/forms": "^0.5.2",
@@ -26,9 +27,11 @@
     "@types/react-dom": "^18.3.1",
     "@types/ua-parser-js": "^0.7.36",
     "classnames": "^2.3.1",
+    "crypto": "npm:crypto-browserify",
     "date-fns": "^4.1.0",
     "egoroof-blowfish": "^4.0.1",
     "grapheme-splitter": "1.0.4",
+    "https": "npm:https-browserify",
     "json-server": "^1.0.0-beta.3",
     "query-string": "^9.1.1",
     "react": "^18.3.1",
@@ -38,9 +41,11 @@
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
     "react-scripts": "^5.0.1",
+    "stream": "npm:stream-browserify",
     "typescript": "^5.6.3",
     "ua-parser-js": "^1.0.2",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "zlib": "npm:browserify-zlib"
   },
   "eslintConfig": {
     "extends": [
