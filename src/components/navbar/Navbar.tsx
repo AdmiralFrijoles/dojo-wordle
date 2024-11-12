@@ -7,7 +7,7 @@ import {
 
 import { ENABLE_ARCHIVED_GAMES } from '../../constants/settings'
 import { GAME_TITLE } from '../../constants/strings'
-import { LoginButton } from './Login'
+import { UserMenu } from './UserMenu'
 import { useAuth0 } from "@auth0/auth0-react";
 
 type Props = {
@@ -28,7 +28,7 @@ export const Navbar = ({
   return (
     <div className="navbar">
       <div className="navbar-content px-5 short:h-auto">
-        <div className="flex">
+        <div className="flex-1 flex justify-center mr-auto">
           <InformationCircleIcon
             className="h-6 w-6 cursor-pointer dark:stroke-white"
             onClick={() => setIsInfoModalOpen(true)}
@@ -40,10 +40,9 @@ export const Navbar = ({
             />
           )}
         </div>
-        <p className="text-xl font-bold dark:text-white">{GAME_TITLE}</p>
-        <div className="right-icons">
-          {!isAuthenticated && <LoginButton/>}
-          {isAuthenticated && <img className='mr-3 h-6 w-6' src={user?.picture} alt={user?.name}/>}
+        <p className="mx-12 text-xl font-bold dark:text-white">{GAME_TITLE}</p>
+        <div className="flex-1 flex justify-center ml-auto">
+          <UserMenu/>
           <ChartBarIcon
             className="mr-3 h-6 w-6 cursor-pointer dark:stroke-white"
             onClick={() => setIsStatsModalOpen(true)}
@@ -54,7 +53,7 @@ export const Navbar = ({
           />
         </div>
       </div>
-      <hr></hr>
+      <hr className='border-slate-300 dark:border-slate-600'></hr>
     </div>
   )
 }

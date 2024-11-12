@@ -45,7 +45,8 @@ export const InstallButton = () => {
     wnd.AddToHomeScreenInstance.isDesktopMac() ||
     wnd.AddToHomeScreenInstance.isDesktopSafari()
 
-  if (isDesktop) return null
+  if (isDesktop || wnd.AddToHomeScreenInstance.isStandAlone())
+    return null
 
   return (
     <button
@@ -62,31 +63,6 @@ export const InstallButton = () => {
   )
 }
 
-export const UserView = () => {
-  //const { user, onLogin } = useDiscordUser()
-
-  return (<></>);
-  //return (
-  //  user && (
-  //    <>
-  //      <div className="flex justify-between gap-4 py-3">
-  //        <div className="mt-2 text-left text-gray-500 dark:text-gray-300">
-  //          <p className="leading-none">Logged in as {user.global_name}</p>
-  //        </div>
-  //        <div className="flex h-8 shrink-0 items-center">
-  //          <button
-  //            className="mt-2 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-2 py-1 text-center text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-base"
-  //            onClick={() => onLogin(null)}
-  //          >
-  //            Logout
-  //          </button>
-  //        </div>
-  //      </div>
-  //    </>
-  //  )
-  //)
-}
-
 export const SettingsModal = ({
   isOpen,
   handleClose,
@@ -100,7 +76,6 @@ export const SettingsModal = ({
   return (
     <BaseModal title="Settings" isOpen={isOpen} handleClose={handleClose}>
       <div className="mt-2 flex flex-col divide-y">
-        <UserView />
         <SettingsToggle
           settingName="Hard Mode"
           flag={isHardMode}

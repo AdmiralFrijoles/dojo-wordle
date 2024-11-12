@@ -21,6 +21,7 @@ import { Histogram } from '../stats/Histogram'
 import { MigrationIntro } from '../stats/MigrationIntro'
 import { StatBar } from '../stats/StatBar'
 import { BaseModal } from './BaseModal'
+import { useAuth0 } from "@auth0/auth0-react";
 
 type Props = {
   isOpen: boolean
@@ -57,6 +58,8 @@ export const StatsModal = ({
   isHighContrastMode,
   numberOfGuessesMade,
 }: Props) => {
+  const { isAuthenticated } = useAuth0();
+
   if (gameStats.totalGames <= 0) {
     return (
       <BaseModal
@@ -136,7 +139,7 @@ export const StatsModal = ({
           </div>
         </div>
       )}
-      {ENABLE_MIGRATE_STATS && (
+      {ENABLE_MIGRATE_STATS && !isAuthenticated && (
         <div>
           <hr className="mt-4 -mb-4 border-gray-500" />
           <MigrationIntro handleMigrateStatsButton={handleMigrateStatsButton} />

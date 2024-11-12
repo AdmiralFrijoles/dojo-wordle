@@ -53,6 +53,14 @@
   animation-fill-mode: backwards;
 }
 
+.cursor-pointer.animated {
+  transition: all var(--animation-speed-fast);
+}
+
+.cursor-pointer.animated:hover {
+  transform: scale(1.2);
+}
+
 svg.cursor-pointer {
   transition: all var(--animation-speed-fast);
 }
@@ -75,10 +83,6 @@ svg.cursor-pointer:hover {
   height: 3rem;
   align-items: center;
   justify-content: space-between;
-}
-
-.right-icons {
-  display: flex;
 }
 
 @keyframes revealAbsentCharCell {
