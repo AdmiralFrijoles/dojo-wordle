@@ -3,6 +3,10 @@ import {
 } from '@heroicons/react/24/outline'
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useRef, useState } from "react";
+import {
+    LOGIN_BUTTON_TEXT,
+    LOGOUT_BUTTON_TEXT
+  } from '../../constants/strings'
 
 const UserIcon = () => {
     const { user, isAuthenticated } = useAuth0();
@@ -49,13 +53,13 @@ export const UserMenu = () => {
                             <li className='relative flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600
                                            rounded-md text-gray-900 dark:text-gray-100 cursor-pointer items-center justify-center'
                                 onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-                                Log Out
+                                {LOGOUT_BUTTON_TEXT}
                             </li>
                         ) : (
                             <li className='relative flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600
                                            rounded-md text-gray-900 dark:text-gray-100 cursor-pointer items-center justify-center'
                                 onClick={() => loginWithRedirect()}>
-                                Log In
+                                {LOGIN_BUTTON_TEXT}
                             </li>
                         )}
                     </ul>

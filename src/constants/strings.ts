@@ -26,6 +26,9 @@ export const SHARE_FAILURE_TEXT =
 export const MIGRATE_BUTTON_TEXT = 'Transfer'
 export const MIGRATE_DESCRIPTION_TEXT =
   'Click here to transfer your statistics to a new device.'
+export const MIGRATE_LOGIN_DESCRIPTION_TEXT = 'Log in to save your stats across devices.'
+export const LOGIN_BUTTON_TEXT = 'Log In'
+export const LOGOUT_BUTTON_TEXT = 'Log Out'
 export const TOTAL_TRIES_TEXT = 'Total tries'
 export const SUCCESS_RATE_TEXT = 'Success rate'
 export const CURRENT_STREAK_TEXT = 'Current streak'
