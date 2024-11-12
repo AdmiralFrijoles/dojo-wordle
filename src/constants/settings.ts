@@ -14,4 +14,6 @@ export const DATE_LOCALE = enUS
 
 export const AUTHZERO_DOMAIN = process.env.REACT_APP_AUTHZERO_DOMAIN
 export const AUTHZERO_CLIENT_ID = process.env.REACT_APP_AUTHZERO_CLIENT_ID
+export const AUTHZERO_AUDIENCE = process.env.REACT_APP_AUTHZERO_AUDIENCE
 export const BASE_URL = process.env.REACT_APP_BASE_URL
+export const STATSERVER_URL = process.env.REACT_APP_STATSERVER_URL

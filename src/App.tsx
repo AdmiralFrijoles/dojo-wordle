@@ -22,6 +22,7 @@ import {
   MAX_CHALLENGES,
   REVEAL_TIME_MS,
   WELCOME_INFO_MODAL_MS,
+  STATSERVER_URL
 } from './constants/settings'
 import {
   CORRECT_WORD_MESSAGE,
@@ -40,6 +41,7 @@ import {
   loadGameStateFromLocalStorage,
   saveGameStateToLocalStorage,
   setStoredIsHighContrastMode,
+  StoredGameState,
 } from './lib/localStorage'
 import { addStatsForCompletedGame, loadStats } from './lib/stats'
 import {
@@ -53,8 +55,11 @@ import {
   solutionGameDate,
   unicodeLength,
 } from './lib/words'
+import { useAuth0 } from "@auth0/auth0-react";
 
 function App() {
+  const { user, isAuthenticated, isLoading: isAuthLoading, getAccessTokenSilently } = useAuth0();
+
   const isLatestGame = getIsLatestGame()
   const gameDate = getGameDate()
   const prefersDarkMode = window.matchMedia(
@@ -83,23 +88,57 @@ function App() {
     getStoredIsHighContrastMode()
   )
   const [isRevealing, setIsRevealing] = useState(false)
+
   const [guesses, setGuesses] = useState<string[]>(() => {
     const loaded = loadGameStateFromLocalStorage(isLatestGame)
     if (loaded?.solution !== solution) {
       return []
     }
-    const gameWasWon = loaded.guesses.includes(solution)
-    if (gameWasWon) {
-      setIsGameWon(true)
-    }
-    if (loaded.guesses.length === MAX_CHALLENGES && !gameWasWon) {
-      setIsGameLost(true)
-      showErrorAlert(CORRECT_WORD_MESSAGE(solution), {
-        persist: true,
-      })
-    }
     return loaded.guesses
   })
+
+  const [isLoadingGameState, setLoadingGameState] = useState(true);
+  useEffect(() => {
+    const loadGameState = async () => {
+      let gameState: StoredGameState | null = null;
+      try {
+        if (user) {
+          const token = await getAccessTokenSilently();
+          const gameDate = getGameDate();
+          const response = await fetch(`${STATSERVER_URL!}/v1/wordle/state?${format(gameDate, "yyyy-MM-dd")}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }).then(x => x.json())
+          gameState = response as StoredGameState;
+        } else {
+          gameState = loadGameStateFromLocalStorage(isLatestGame)
+        }
+      } catch (error) {
+        gameState = loadGameStateFromLocalStorage(isLatestGame)
+      } finally {
+        if (gameState?.solution !== solution) {
+          setGuesses([]);
+          return;
+        }
+        const gameWasWon = gameState.guesses.includes(solution)
+        if (gameWasWon) {
+          setIsGameWon(true)
+        }
+        if (gameState.guesses.length === MAX_CHALLENGES && !gameWasWon) {
+          setIsGameLost(true)
+          showErrorAlert(CORRECT_WORD_MESSAGE(solution), {
+            persist: true,
+          })
+        }
+        setGuesses(gameState.guesses);
+        setLoadingGameState(false);
+      }
+    };
+
+    loadGameState();
+  }, [user, isAuthenticated]);
 
   const [stats, setStats] = useState(() => loadStats())
 
@@ -166,7 +205,31 @@ function App() {
   }
 
   useEffect(() => {
-    saveGameStateToLocalStorage(getIsLatestGame(), { guesses, solution })
+    const gameState = { guesses, solution, date: getGameDate() };
+    saveGameStateToLocalStorage(getIsLatestGame(), gameState)
+
+    const saveGameState = async () => {
+      if (isLoadingGameState || isAuthLoading) return;
+      try {
+        const token = await getAccessTokenSilently();
+        await fetch(`${STATSERVER_URL!}/v1/wordle/state`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            date: format(gameState.date, "yyyy-MM-dd"),
+            solution: gameState.solution,
+            guesses: gameState.guesses
+          })
+        });
+      } catch {
+        // ignored
+      }
+    };
+
+    saveGameState();
   }, [guesses])
 
   useEffect(() => {
@@ -290,6 +353,7 @@ function App() {
           </div>
         )}
 
+        {!isLoadingGameState && (
         <div className="mx-auto flex w-full grow flex-col px-1 pb-8 pt-2 sm:px-6 md:max-w-7xl lg:px-8 short:pb-2 short:pt-2">
           <div className="flex grow flex-col justify-center pb-6 short:pb-2">
             <Grid
@@ -361,6 +425,7 @@ function App() {
           />
           <AlertContainer />
         </div>
+        )}
       </div>
     </Div100vh>
   )
